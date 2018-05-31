@@ -48,7 +48,7 @@ namespace Microsoft.SourceLink.Vsts.Git
                 return;
             }
 
-            var map = TryGetStandardUriMap();
+            var map = TryGetEnvironmentUriMap();
             if (map != null && map.TryGetValue(repoUri, out var mappedUri))
             {
                 repoUri = mappedUri;
@@ -91,7 +91,7 @@ namespace Microsoft.SourceLink.Vsts.Git
         }
 
         // TODO: confirm design and test https://github.com/dotnet/sourcelink/issues/2
-        private Dictionary<Uri, Uri> TryGetStandardUriMap()
+        private Dictionary<Uri, Uri> TryGetEnvironmentUriMap()
         {
             var urlSeparators = new[] { Path.PathSeparator };
             Dictionary<Uri, Uri> map = null;
@@ -162,7 +162,8 @@ namespace Microsoft.SourceLink.Vsts.Git
         internal static bool TryParseRepositoryUrl(Uri repoUri, string domain, out string projectName, out string repositoryName, out string collectionName)
         {
             // URL format pattern:
-            // https://{domain}/[DefaultCollection/]?{project}/_git/{repository-name}[.git]
+            // https://{domain}[:{port}]/[DefaultCollection/]?{project}/_git/{repository-name}[.git]
+            // ssh://{account}@{domain}[:{port}]/[DefaultCollection/]?{project}/_ssh/{repository-name}[.git]
 
             projectName = null;
             repositoryName = null;
@@ -198,7 +199,8 @@ namespace Microsoft.SourceLink.Vsts.Git
                 }
             }
 
-            if (!parts[parts.Length - 2].Equals("_git", StringComparison.OrdinalIgnoreCase))
+            if (!parts[parts.Length - 2].Equals("_git", StringComparison.OrdinalIgnoreCase) &&
+                !parts[parts.Length - 2].Equals("_ssh", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }

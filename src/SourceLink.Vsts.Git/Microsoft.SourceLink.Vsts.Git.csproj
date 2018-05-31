@@ -12,6 +12,9 @@
     <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="GetSourceLinkUrl.cs~RF10af65d8.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="..\Common\Names.cs" Link="Common\Names.cs" />
   </ItemGroup>
   <ItemGroup>
